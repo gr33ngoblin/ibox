@@ -69,3 +69,26 @@ Create/push GitHub fork once browser or CLI write authentication is available.
 Run the manual baseline workflow before the fork workflow. Obtain a signed IPA,
 verify JIT first, then conduct one operator test at a time. Keep traces/dumps,
 pairing files and credentials outside the repository. No game files bundled.
+
+## Milestone 1 implementation
+
+- Baseline checkpoint: 8fe971eb8.
+- Branding: 6ac561555 — distinct display name, bundle ID and launch URL. Upstream
+  executable/icon/credits retained; StikDebug uses the actual installed bundle ID.
+- Build workflow: 2d1bf8ba5 — manual baseline/fork builds on macOS CI, license
+  notices and hashed manifests, no upstream publish/attestation secrets.
+- Patch metadata UI: 76c15148f — supported hash list from the active local TOML,
+  title ID/filename, explicit relaunch and unverified-toggle messaging.
+- Local checks: Python syntax compilation and manifest generation succeeded;
+  iOS plist XML/plist parsing succeeded; git diff whitespace check passed.
+  Changed Objective-C++ regions formatted using clang-format 23.1.3.
+- Additional finding: Metal cache initialization currently hardcodes 1x1 scale.
+  Internal display resolution is not the same as guest render-resolution scaling.
+  Higher-resolution UI, sharpening, measured presets and performance gains deferred.
+- Full iOS compile remains pending CI access. Patch UI runtime behavior remains
+  pending; hash mismatch rejection already exists in the upstream runtime.
+- No verified UFC cheat addresses introduced. Conflict detection, restore-defaults,
+  per-game graphics profiles and additional diagnostics are outstanding work.
+- Baseline problems are external reports; no confirmed local/device regression.
+- Artifacts: source in D:\-aiemulators\iBox; docs/verde360/BUILD.md,
+  INSTALL-JIT.md, CREDITS.md and manifest.json. No IPA artifact exists yet.
