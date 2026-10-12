@@ -299,7 +299,7 @@ NSString* xe_launch_url_for_title_id(uint32_t title_id, IOSGameSystem system) {
     return nil;
   }
   NSURLComponents* components = [[[NSURLComponents alloc] init] autorelease];
-  components.scheme = @"xenios";
+  components.scheme = @"verde360";
   components.host = @"launch";
   components.queryItems = @[
     [NSURLQueryItem queryItemWithName:@"title-id" value:ToNSString(FormatTitleID(title_id))],
@@ -311,7 +311,7 @@ NSString* xe_launch_url_for_title_id(uint32_t title_id, IOSGameSystem system) {
 NSString* xe_game_info_callback_provider(NSURL* request_url) {
   NSString* scheme = NormalizeURLToken(request_url ? request_url.scheme : nil);
   if (!scheme || scheme.length == 0) {
-    return @"xenios";
+    return @"verde360";
   }
   return [scheme lowercaseString];
 }
