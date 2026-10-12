@@ -92,3 +92,21 @@ pairing files and credentials outside the repository. No game files bundled.
 - Baseline problems are external reports; no confirmed local/device regression.
 - Artifacts: source in D:\-aiemulators\iBox; docs/verde360/BUILD.md,
   INSTALL-JIT.md, CREDITS.md and manifest.json. No IPA artifact exists yet.
+
+## Remote fork and first CI dispatch
+
+- Fork: https://github.com/gr33ngoblin/ibox
+- origin is the user's fork; upstream remains xenios-jp/XeniOS. Default fork
+  HEAD matched the pinned upstream baseline before changes were pushed.
+- Review branch: verde360/ufc-baseline, pushed successfully.
+- CI source commit: 8bbc07f117123bdcca5d3b37d39aaff843c5dfcf.
+- iOS build run: https://github.com/gr33ngoblin/ibox/actions/runs/38205632933.
+  Both jobs passed Xcode/toolchain selection and reached dependency setup.
+  Compilation and artifacts still pending at this checkpoint.
+- Inherited CI run 38205633091 failed full-tree clang-format 21.1.8 lint on
+  unchanged a64_backend.cc and a64_seq_memory.cc. Verified those lines exist
+  in the pinned baseline. This is an upstream formatting issue, not evidence
+  of a Verde360 runtime regression. Separate iOS workflow is not gated by it.
+- GitHub connector cannot create a draft PR in this fork (403 integration
+  permission); normal Git push authentication works. The branch remains
+  available for review without merging.
