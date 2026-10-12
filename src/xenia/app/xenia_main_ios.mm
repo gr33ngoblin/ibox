@@ -467,6 +467,18 @@ ui::IOSPatchFileSummary BuildIOSPatchFileSummary(const patcher::BundledPatchFile
     return summary;
   }
 
+  if (auto hash = root["hash"].value<std::string>()) {
+    if (!hash->empty()) {
+      summary.supported_hashes.push_back(*hash);
+    }
+  } else if (auto* hashes = root["hash"].as_array()) {
+    for (const auto& node : *hashes) {
+      if (auto hash = node.value<std::string>(); hash && !hash->empty()) {
+        summary.supported_hashes.push_back(*hash);
+      }
+    }
+  }
+
   auto* patches = root["patch"].as_array();
   if (!patches) {
     return summary;

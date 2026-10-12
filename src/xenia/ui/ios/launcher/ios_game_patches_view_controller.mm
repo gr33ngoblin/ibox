@@ -122,11 +122,20 @@ NSString* PatchDetailText(const xe::ui::IOSPatchEntrySummary& patch) {
     }
     return @"Patch files were found, but none matched this title ID.";
   }
-  if (section == static_cast<NSInteger>(patch_files_.size()) - 1) {
-    return @"Patch changes are saved immediately and take effect the next time "
-           @"the game launches.";
+  const auto& file = patch_files_[static_cast<size_t>(section)];
+  NSMutableArray<NSString*>* hashes = [NSMutableArray array];
+  for (const auto& hash : file.supported_hashes) {
+    [hashes addObject:ToNSString(hash)];
   }
-  return nil;
+  NSString* supported_builds = hashes.count
+                                   ? [hashes componentsJoinedByString:@", "]
+                                   : @"None declared; this file cannot match an executable.";
+  return [NSString
+      stringWithFormat:@"Title ID %08X\nSupported executable hashes: %@\n%@\n"
+                       @"Selections are saved immediately. Relaunch the game to apply changes. "
+                       @"The runtime applies only patches matching the executable hash. "
+                       @"An enabled switch does not mean the patch was applied or verified.",
+                       file.title_id, supported_builds, ToNSString(file.filename)];
 }
 
 - (UITableViewCell*)tableView:(UITableView*)tableView

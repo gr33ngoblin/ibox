@@ -84,6 +84,7 @@ struct IOSPatchFileSummary {
   std::string filename;
   std::string display_name;
   std::string title_name;
+  std::vector<std::string> supported_hashes;
   std::vector<IOSPatchEntrySummary> patches;
 };
 
