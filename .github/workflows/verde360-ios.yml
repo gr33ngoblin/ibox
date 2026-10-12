@@ -1,13 +1,15 @@
 name: Verde360 iOS review build
 
 on:
+  push:
+    branches: [verde360/ufc-baseline]
   workflow_dispatch:
     inputs:
       variant:
         description: Build the pinned unmodified baseline or current fork
         type: choice
-        default: baseline
-        options: [baseline, fork]
+        default: both
+        options: [baseline, fork, both]
 
 permissions:
   contents: read
@@ -16,6 +18,10 @@ jobs:
   ios:
     runs-on: macos-15
     timeout-minutes: 180
+    strategy:
+      fail-fast: false
+      matrix:
+        variant: ${{ fromJSON(inputs.variant == 'baseline' && '["baseline"]' || inputs.variant == 'fork' && '["fork"]' || '["baseline","fork"]') }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -23,7 +29,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           path: source
-          ref: ${{ inputs.variant == 'baseline' && '87b176a078c316fde3adf67a217f0c44615b0e0d' || github.sha }}
+          ref: ${{ matrix.variant == 'baseline' && '87b176a078c316fde3adf67a217f0c44615b0e0d' || github.sha }}
           fetch-depth: 0
       - name: Select upstream toolchain
         run: |
@@ -42,7 +48,7 @@ jobs:
         id: build
         working-directory: source
         env:
-          VARIANT: ${{ inputs.variant }}
+          VARIANT: ${{ matrix.variant }}
         run: |
           bundle_id=io.github.gr33ngoblin.verde360
           if [ "$VARIANT" = baseline ]; then bundle_id=com.xenios; fi
@@ -77,6 +83,6 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: verde360-${{ inputs.variant }}-requires-signing-${{ github.run_id }}
+          name: verde360-${{ matrix.variant }}-requires-signing-${{ github.run_id }}
           path: source/scratch/artifacts/
           if-no-files-found: error

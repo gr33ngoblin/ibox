@@ -1,7 +1,8 @@
 # Build without a Mac
 
-Push this branch to your GitHub fork and enable Actions. Run **Verde360 iOS
-review build** manually with `variant=baseline` first, then `variant=fork`.
+Push this branch to your GitHub fork and enable Actions. Branch pushes run both
+the baseline and fork as separate jobs. Once this workflow is on the default
+branch, **Verde360 iOS review build** also offers manual baseline/fork/both runs.
 The baseline source is pinned and unmodified; the control checkout supplies
 only the workflow's manifest generator. Both use upstream's build/packaging
 script. No Apple or upstream attestation secrets are required.
