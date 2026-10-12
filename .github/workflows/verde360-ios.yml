@@ -1,0 +1,82 @@
+name: Verde360 iOS review build
+
+on:
+  workflow_dispatch:
+    inputs:
+      variant:
+        description: Build the pinned unmodified baseline or current fork
+        type: choice
+        default: baseline
+        options: [baseline, fork]
+
+permissions:
+  contents: read
+
+jobs:
+  ios:
+    runs-on: macos-15
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: control
+      - uses: actions/checkout@v4
+        with:
+          path: source
+          ref: ${{ inputs.variant == 'baseline' && '87b176a078c316fde3adf67a217f0c44615b0e0d' || github.sha }}
+          fetch-depth: 0
+      - name: Select upstream toolchain
+        run: |
+          test -d /Applications/Xcode_26.3.app
+          sudo xcode-select -s /Applications/Xcode_26.3.app
+          xcodebuild -version
+          xcrun --sdk iphoneos --show-sdk-version
+          brew install ninja
+      - name: Initialize pinned dependencies and upstream data
+        working-directory: source
+        run: |
+          git submodule update --init --recursive --depth=1 -j4
+          git -C third_party/DirectXShaderCompiler submodule update --init --depth=1 external/SPIRV-Headers external/SPIRV-Tools
+          ./xenia-build.py fetchdata
+      - name: Build ad-hoc IPA requiring real signing
+        id: build
+        working-directory: source
+        env:
+          VARIANT: ${{ inputs.variant }}
+        run: |
+          bundle_id=io.github.gr33ngoblin.verde360
+          if [ "$VARIANT" = baseline ]; then bundle_id=com.xenios; fi
+          ./tools/build_apple_release.sh --skip-macos-arm64 --skip-macos-x86_64 --skip-macos-universal --ios-bundle-id "$bundle_id"
+          test -s scratch/artifacts/xenios_ios_iphone_ipad.ipa
+      - name: Collect license notices
+        if: success()
+        working-directory: source
+        run: |
+          mkdir -p scratch/artifacts/notices
+          cp LICENSE ../control/docs/verde360/CREDITS.md scratch/artifacts/notices/
+          python3 - <<'PY'
+          from pathlib import Path
+          import shutil
+          import subprocess
+          files = subprocess.check_output(['git', 'ls-files', '--recurse-submodules'], text=True).splitlines()
+          for name in files:
+              path = Path(name)
+              if name.startswith('third_party/') and path.is_file() and path.name.lower().startswith(('license', 'copying', 'notice')):
+                  target = Path('scratch/artifacts/notices') / path
+                  target.parent.mkdir(parents=True, exist_ok=True)
+                  shutil.copyfile(path, target)
+          PY
+      - name: Record build manifest
+        if: always()
+        env:
+          BUILD_OUTCOME: ${{ steps.build.outcome }}
+        run: |
+          status=failed
+          if [ "$BUILD_OUTCOME" = success ]; then status=passed; fi
+          python3 control/tools/verde360_manifest.py --source source --artifacts source/scratch/artifacts --output source/scratch/artifacts/manifest.json --build-status "$status"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: verde360-${{ inputs.variant }}-requires-signing-${{ github.run_id }}
+          path: source/scratch/artifacts/
+          if-no-files-found: error
