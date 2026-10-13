@@ -148,3 +148,23 @@ pairing files and credentials outside the repository. No game files bundled.
   route remain to be established. No Apple credential changes made.
 - Warning wording corrected to explain re-signing, without the upstream app name
   or an unexplained Get More RAM setting. This does not grant the entitlement.
+
+## Free-account signing candidate
+
+- User declines paid Developer Program and requests no SideStore.
+- Further signer tracing found isideload already exposes increased_memory_limit
+  and requests Apple's INCREASED_MEMORY_LIMIT capability before provisioning.
+  Current iloader source calls install_app with that argument false.
+- A separate local Windows CLI uses the existing true flag. The attempted
+  signature-only library experiment was discarded; isideload library source
+  remains unchanged. Local review commit: 5459374 in signing-tools/isideload.
+- Executable: D:\-aiemulators\signing-tools\isideload\target\debug\verde360-sign.exe.
+  SHA-256: 79305c46b6c9da8524920da02b48dca88c75463be827b2c8c0d1c377dd297a53.
+- Windows build passed. Help, rejection of unapproved input before prompting
+  for credentials, rustfmt and whitespace checks passed. No account operation
+  or phone installation was performed. No credentials supplied to this agent.
+- CLI accepts only the verified original IPA hash, hides password/2FA input,
+  requires one USB device and retains explicit certificate-revocation selection.
+  Its source, MIT license and own manifest remain outside the emulator repo.
+- Free-account capability acceptance and installed entitlement status are pending
+  the next operator test. Do not claim a resolved signing or memory blocker yet.
