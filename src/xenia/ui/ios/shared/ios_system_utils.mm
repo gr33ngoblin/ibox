@@ -204,14 +204,16 @@ BOOL xe_has_increased_memory_limit_entitlement(void) {
 }
 
 NSString* xe_memory_entitlement_missing_status_message(void) {
-  return @"Memory entitlement missing. Games will likely crash. Enable Get More RAM, then refresh "
-         @"XeniOS.";
+  return @"Increased-memory entitlement not detected. Games may crash. Re-sign and reinstall "
+         @"with a signing tool that preserves this entitlement.";
 }
 
 NSString* xe_memory_entitlement_not_detected_guidance_message(void) {
-  return @"The increased-memory entitlement is not enabled in the installed app. Most games will "
-         @"likely crash without it.\n\nEnable Get More RAM for XeniOS, then refresh or reinstall "
-         @"the app so it is signed with increased memory.";
+  return @"The installed app does not report the increased-memory entitlement. Games may crash "
+         @"without it.\n\nYour signing tool must preserve "
+         @"com.apple.developer.kernel.increased-memory-limit when signing this app. Re-sign and "
+         @"reinstall, then check this status again. This permission cannot be enabled in the "
+         @"app's settings.";
 }
 
 std::filesystem::path xe_get_ios_documents_path(void) {

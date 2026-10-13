@@ -131,3 +131,20 @@ pairing files and credentials outside the repository. No game files bundled.
   no credentials or raw device logs were added to the repository.
 - Baseline device tests, UFC build identity, fighter rendering, performance,
   sustained thermals and gameplay-altering patches remain pending.
+
+## Signing blocker after installation
+
+- Operator installed and launched Verde360 using iloader. StikDebug app
+  discovery was subsequently reported working; Verde360 gameplay/JIT is pending.
+- Phone screenshot reports missing increased-memory entitlement.
+- Verified original artifact XeniOS.signed-entitlements.plist contains the
+  increased-memory-limit entitlement. Installed entitlement state differs.
+- Current isideload source signs with provisioning-profile entitlements instead
+  of preserving all original requests. This is a lead for iloader's behavior,
+  not a complete audit of the user's installed signing library version.
+- Sideloadly's official changelog lists custom entitlements as a Patreon feature
+  requiring Apple Developer Program membership. No free fix claimed.
+- User requests no SideStore dependency. Account type and a supported signing
+  route remain to be established. No Apple credential changes made.
+- Warning wording corrected to explain re-signing, without the upstream app name
+  or an unexplained Get More RAM setting. This does not grant the entitlement.
