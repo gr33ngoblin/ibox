@@ -168,3 +168,17 @@ pairing files and credentials outside the repository. No game files bundled.
   Its source, MIT license and own manifest remain outside the emulator repo.
 - Free-account capability acceptance and installed entitlement status are pending
   the next operator test. Do not claim a resolved signing or memory blocker yet.
+
+## Authentication blocker
+
+- Operator ran the signer; initial Apple GrandSlam login failed with -80045.
+  The memory capability request, signing and installation were never reached.
+- iloader login also failed. Normal account.apple.com web sign-in succeeded;
+  changing the password did not resolve the sideloading login failure.
+- Similar public reports: nab138/iloader issues 859 and 864. Comments checked
+  contain no verified remedy. These reports support a shared authentication
+  route problem but do not identify Apple's exact reason for rejection.
+- Preserve installed apps and existing certificates; no revocation, repeated
+  password changes or speculative provider/account switching performed here.
+- Signer updated to exit with a clear authentication failure instead of unwrap
+  panic. Free-account memory grant remains untested. No game results invented.
