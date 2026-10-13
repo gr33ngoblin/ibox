@@ -1,20 +1,27 @@
 {
   "schema_version": 1,
   "upstream_commit": "87b176a078c316fde3adf67a217f0c44615b0e0d",
-  "source_commit": "6d42f16898bb812d93d2968b87ef3d8a3eaf6556",
+  "source_commit": "8bbc07f117123bdcca5d3b37d39aaff843c5dfcf",
   "source_dirty": false,
   "toolchain": {
-    "host_os": "Windows",
-    "python": "3.12.4",
-    "git": "git version 2.47.1.windows.2",
-    "xcode": null,
-    "iphoneos_sdk": null,
-    "cmake": null,
-    "ninja": null
+    "host_os": "Darwin",
+    "python": "3.14.7",
+    "git": "git version 2.55.0",
+    "xcode": "Xcode 26.3\nBuild version 17C529",
+    "iphoneos_sdk": "26.2",
+    "cmake": "cmake version 4.4.3\n\nCMake suite maintained and supported by Kitware (kitware.com/cmake).",
+    "ninja": "1.13.2"
   },
-  "artifacts": [],
+  "artifacts": [
+    {
+      "path": "xenios_ios_iphone_ipad.ipa",
+      "size_bytes": 46262864,
+      "sha256": "bdaf4bfb61680dc6121655981b0562eeb1a257c878e21610e1a73f367a867337",
+      "signing": "ad_hoc_requires_provisioned_resigning"
+    }
+  ],
   "tests": {
-    "ios_build": "not_run",
+    "ios_build": "passed",
     "signing": "pending",
     "installation": "pending",
     "jit_device": "pending",

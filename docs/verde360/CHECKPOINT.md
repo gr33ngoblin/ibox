@@ -110,3 +110,24 @@ pairing files and credentials outside the repository. No game files bundled.
 - GitHub connector cannot create a draft PR in this fork (403 integration
   permission); normal Git push authentication works. The branch remains
   available for review without merging.
+
+## Build artifact and device setup checkpoint
+
+- CI run 38205632933 completed successfully for both baseline and fork.
+- Fork built source: 8bbc07f117123bdcca5d3b37d39aaff843c5dfcf.
+- Toolchain: Xcode 26.3 (17C529), iPhoneOS SDK 26.2, CMake 4.4.3,
+  Ninja 1.13.2, Python 3.14.7, Git 2.55.0, hosted macOS runner.
+- Fork IPA downloaded to
+  D:\-aiemulators\Verde360-artifacts\fork-build\xenios_ios_iphone_ipad.ipa.
+- SHA-256: bdaf4bfb61680dc6121655981b0562eeb1a257c878e21610e1a73f367a867337.
+  Matched the CI manifest; plist confirmed Verde360 and the distinct bundle ID.
+- Artifact is ad-hoc signed and requires real signing/provisioning through
+  iloader or another supported signer. Verde360 installation and JIT are pending.
+- Operator reports Luigi's Mansion loads and reaches working gameplay in
+  DolphiniOS via StikDebug on the target phone. This supports that app's setup;
+  it does not verify Verde360's ARM64 JIT/broker or UFC gameplay.
+- SideStore nightly rejected the combined Remote Pairing/Lockdown file as
+  ambiguous. A Remote Pairing-only derivative was prepared outside this repo;
+  no credentials or raw device logs were added to the repository.
+- Baseline device tests, UFC build identity, fighter rendering, performance,
+  sustained thermals and gameplay-altering patches remain pending.
