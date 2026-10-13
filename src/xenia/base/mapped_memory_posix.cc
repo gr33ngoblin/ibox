@@ -13,9 +13,12 @@
 #include <sys/mman.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <cerrno>
+#include <cstring>
 #include <memory>
 
 #include "xenia/base/filesystem.h"
+#include "xenia/base/logging.h"
 #include "xenia/base/platform.h"
 
 namespace xe {
@@ -48,6 +51,9 @@ class PosixMappedMemory : public MappedMemory {
 
     struct stat file_stat;
     if (fstat(file_descriptor, &file_stat)) {
+      const int error = errno;
+      XELOGE("MappedMemory: fstat failed (errno={} message={})", error,
+             std::strerror(error));
       close(file_descriptor);
       return nullptr;
     }
@@ -59,6 +65,10 @@ class PosixMappedMemory : public MappedMemory {
     }
 
     if (!map_length) {
+      XELOGE(
+          "MappedMemory: empty mapping (file_size={} offset={} "
+          "requested_length={})",
+          file_size, offset, length);
       close(file_descriptor);
       return nullptr;
     }
@@ -66,6 +76,12 @@ class PosixMappedMemory : public MappedMemory {
     void* data =
         mmap(0, map_length, protection, MAP_SHARED, file_descriptor, offset);
     if (data == MAP_FAILED) {
+      const int error = errno;
+      XELOGE(
+          "MappedMemory: mmap failed (file_size={} offset={} map_length={} "
+          "protection={} errno={} message={})",
+          file_size, offset, map_length, protection, error,
+          std::strerror(error));
       close(file_descriptor);
       return nullptr;
     }
@@ -108,6 +124,11 @@ std::unique_ptr<MappedMemory> MappedMemory::Open(
   }
   int file_descriptor = open(path.c_str(), open_flags);
   if (file_descriptor < 0) {
+    const int error = errno;
+    XELOGE(
+        "MappedMemory: open failed (path={} offset={} requested_length={} "
+        "errno={} message={})",
+        path.string(), offset, length, error, std::strerror(error));
     return nullptr;
   }
   return PosixMappedMemory::WrapFileDescriptor(file_descriptor, mode, offset,

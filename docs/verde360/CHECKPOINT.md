@@ -182,3 +182,18 @@ pairing files and credentials outside the repository. No game files bundled.
   password changes or speculative provider/account switching performed here.
 - Signer updated to exit with a clear authentication failure instead of unwrap
   panic. Free-account memory grant remains untested. No game results invented.
+
+## ISO mapping diagnostics — 2026-10-13
+
+- Operator reports roughly 5.7 GB ISO. Both app-local and iCloud launches log
+  Disc image could not be mapped. ZAR conversion also failed; no conversion
+  error details supplied. UFC has not reached verified title-screen/gameplay.
+- DiscImageDevice maps the whole file before GDFX verification. Existing log
+  cannot distinguish open/fstat/empty-file/mmap failures. File size is virtual
+  mapping size, not a claim that all bytes are loaded into resident RAM.
+- Added error-only POSIX mapping diagnostics: failing operation, preserved errno,
+  error message, file size, requested mapping length, offset and protection.
+  Loading semantics unchanged. No speculative RAM entitlement or range fix.
+- Formatting and whitespace checks passed. iOS diagnostic build pending CI.
+  Existing IPA lacks these diagnostics; no more repeated phone attempts needed
+  until a successfully built and installed diagnostic artifact is available.
